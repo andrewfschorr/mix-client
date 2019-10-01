@@ -6,8 +6,13 @@
         "import"
     ],
     "rules": {
+        "indent": ["error", 2],
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "indent": ["error", 2]
+        "react/jsx-props-no-spreading": [0, {
+            "html": "ignore",
+            "custom": "ignore",
+            "exceptions": []
+        }]
     },
     "globals": {
         "React": "readonly"
