@@ -32,9 +32,7 @@ export default function Header({ type, pathname }) {
             <li className="ml-4" key={i}>
               <Link
                 href={`/${linkObj.url ? linkObj.url : linkObj.name}`}>
-                <a
-                  className={`px-3 py-1 ${pathname.slice(1) === linkObj.name ? ACTIVE_STYLE : ''}`}
-                >{linkObj.name}</a>
+                <a className={`px-3 py-1 ${pathname.slice(1) === linkObj.name ? ACTIVE_STYLE : ''}`}>{linkObj.name}</a>
               </Link>
             </li>
           ))}

@@ -12,7 +12,8 @@
             "html": "ignore",
             "custom": "ignore",
             "exceptions": []
-        }]
+        }],
+        "react/jsx-closing-bracket-location": [1, "line-aligned"]
     },
     "globals": {
         "React": "readonly"
