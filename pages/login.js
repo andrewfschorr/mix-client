@@ -1,4 +1,5 @@
 import 'styles/global.css';
+
 import { useState } from 'react';
 
 import doFetch from 'utils/doFetch';
@@ -8,10 +9,17 @@ import { COOKIE_NAME } from 'utils/appConstants';
 
 const logUserIn = async (email, password, toggleHasError) => {
   if (email.trim() === '' || password.trim() === '') return;
-  const resp = await doFetch('login', {}, 'POST', {
-    email,
-    password,
-  });
+
+  const resp = await doFetch(
+    '/login',
+    undefined,
+    'POST',
+    {
+      email,
+      password,
+    },
+  );
+
   if (resp.status === 200) {
     const data = await resp.json();
     setCookie({ [COOKIE_NAME]: data.access_token });
@@ -58,12 +66,12 @@ const Login = ({ pathname }) => {
               onClick={() => logUserIn(email, password, toggleHasError)}>
               Log In
             </button>
-            <a
+            {/* <a
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#"
               onClick={() => {console.log('TODO')}}
             >
               Forgot Password?
-            </a>
+            </a> */}
           </div>
         </form>
       </div>

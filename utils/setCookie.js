@@ -7,7 +7,5 @@ export default (cookieProps) => {
     const [key, value] = arrayEntries;
     cookieString += `${key}=${value};`;
   });
-  console.log(cookieString);
-  // TODO set time
   document.cookie = cookieString;
 }

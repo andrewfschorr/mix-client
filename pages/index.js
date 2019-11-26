@@ -1,10 +1,14 @@
 import 'styles/global.css';
+
+import https from 'https';
+
 import Skeleton from 'common/Skeleton';
 import cookies from 'next-cookies';
 import doFetch from 'utils/doFetch';
 
+import { IS_DEV } from 'utils/appConstants';
+
 function Index({ pathname, data }) {
-  // console.log(data);
   return (
     <Skeleton pathname={pathname}>
     <div className="w-full flex main">
@@ -25,11 +29,19 @@ function Index({ pathname, data }) {
 
 Index.getInitialProps = async (ctx) => {
   const { whiskyNeat } = cookies(ctx);
+  const additionalData = IS_DEV ? {
+    agent: new https.Agent({
+      rejectUnauthorized: false,
+    }),
+  } : {};
+
   const res = await doFetch(
     '/me',
     {
       Authorization: `Bearer ${whiskyNeat}`,
     },
+    undefined,
+    additionalData,
   );
   const data = await res.json();
   return {

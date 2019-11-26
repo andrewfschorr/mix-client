@@ -2,13 +2,12 @@ import fetch from 'isomorphic-unfetch';
 
 import { API_URL } from 'utils/appConstants';
 
-const defaultBody = {};
-
 const doFetch = function doFetchFn(
   endpoint,
   additionalHeaders = {},
   method = 'GET',
-  body = defaultBody,
+  additionalData = {},
+  body = {},
 ) {
   const mergedHeaders = {
     Accept: 'application/json',
@@ -20,15 +19,17 @@ const doFetch = function doFetchFn(
     mode: 'cors',
     credentials: 'include',
     headers: mergedHeaders,
+    ...additionalData,
   };
 
-  if (body !== defaultBody && method !== 'GET') {
+  if (Object.keys(body) > 0 && method !== 'GET') {
     data = {
       ...data,
       body: JSON.stringify(body),
     };
   }
-  return fetch(`${API_URL}/${endpoint}`, data);
+  // return fetch(`${API_URL}${endpoint}`, data);
+  return fetch(`${API_URL}${endpoint}`, data);
 };
 
 export default doFetch;

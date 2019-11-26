@@ -7,6 +7,7 @@ module.exports = withCSS({
   publicRuntimeConfig: {
     API_URL: process.env.API_URL,
     COOKIE_NAME: process.env.COOKIE_NAME,
+    IS_DEV: process.env.NODE_ENV === 'development',
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     const resolveModulesPaths = [
