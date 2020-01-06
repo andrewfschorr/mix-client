@@ -1,9 +1,15 @@
 import Router from 'next/router';
 import cookies from 'next-cookies';
-import https from 'https';
 
 import doFetch from 'utils/doFetch';
-import { IS_DEV } from 'utils/appConstants';
+import { COOKIE_NAME } from 'utils/appConstants';
+
+export const turnAuthCookieIntoHeader = function(cookies) {
+  const authToken = cookies[COOKIE_NAME];
+  return {
+    Authorization: `Bearer ${authToken}`,
+  };
+};
 
 export const redirect = ({ res }, location) => {
   if (res) {
@@ -18,25 +24,21 @@ export const redirect = ({ res }, location) => {
 };
 
 export const redirectIfLoggedIn = async (ctx) => {
-  const { whiskyNeat } = cookies(ctx);
-  if (whiskyNeat && ctx.res) {
-    const data = IS_DEV ? {
-      agent: new https.Agent({
-        rejectUnauthorized: false,
-      }),
-    } : {};
-    const headers = {
-      Authorization: `Bearer ${whiskyNeat}`,
-    };
-    const userInfoResponse = await doFetch({
-      endpoint: '/me',
-      headers,
-      data,
-    });
-    if (ctx.res && userInfoResponse.status === 200) {
-      redirect(ctx, '/');
-      return true;
-    }
+  const cooks = cookies(ctx);
+  const authToken = cooks[COOKIE_NAME];
+
+  // TODO do i need to deal with requests from the clinet in any specific way?
+  const additionalHeaders = ctx.req ? {
+    cookie: `${COOKIE_NAME}=${authToken}`,
+  } : {};
+  const userInfoResponse = await doFetch('/me', {
+    headers: {
+      ...additionalHeaders,
+    },
+  });
+  if (userInfoResponse.status === 200) {
+    redirect(ctx, '/');
+    return true;
   }
   return false;
 };

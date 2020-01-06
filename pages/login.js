@@ -5,7 +5,7 @@ import doFetch from 'utils/doFetch';
 import setCookie from 'utils/setCookie';
 import Skeleton from 'common/Skeleton';
 import { redirectIfLoggedIn, redirect } from 'utils/requestHelpers';
-import { COOKIE_NAME } from 'utils/appConstants';
+import { COOKIE_NAME, IS_DEV } from 'utils/appConstants';
 
 const logUserIn = async (e, email, password, toggleHasError) => {
   e.preventDefault();
@@ -81,7 +81,10 @@ const Login = ({ pathname }) => {
 };
 
 Login.getInitialProps = async function (ctx) {
-  await redirectIfLoggedIn(ctx);
+  if (!IS_DEV) {
+    const hasRedirected = await redirectIfLoggedIn(ctx);
+    if (hasRedirected) return {};
+  }
   const { pathname } = ctx;
   return {
     pathname,

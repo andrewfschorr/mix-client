@@ -62,7 +62,6 @@ Index.getInitialProps = async (ctx) => {
       ...additionalHeaders,
     },
   });
-
   if (userInfoResponse.status !== 200) {
     redirect(ctx, '/login');
   }

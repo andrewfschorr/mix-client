@@ -1,40 +1,22 @@
-import unfetch from 'isomorphic-unfetch';
-import https from 'https';
-import { API_URL, IS_DEV, COOKIE_NAME } from 'utils/appConstants';
+import doFetch from 'utils/doFetch';
+import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
 export default async (req, res) => {
-  if (req.method === 'POST') {
-    const { name, description } = req.body;
-    const cookies = req.cookies;
-    const authToken = cookies[COOKIE_NAME];
-    console.log(name, description);
-    if (typeof authToken === 'undefined') {
-      res.status(401).json('Not authorized');
-    }
-    const data = IS_DEV ? {
-      agent: new https.Agent({
-        rejectUnauthorized: false,
-      }),
-    } : {};
+  const { name, description } = req.body;
 
-    const resp = await unfetch(`${API_URL}/api/drink`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        description,
-      }),
-      ...data,
-    });
-    if (resp.status === 200) {
-      res.status(200).json(await resp.json());
-    } else {
-      console.log(resp);
-      res.status(resp.status).json(resp.statusText);
-    }
+  const response = await doFetch('/drink', {
+    method: req.method,
+    headers: turnAuthCookieIntoHeader(req.cookies),
+    body: {
+      name,
+      description,
+    },
+  }, true);
+
+  if (response.status === 200) {
+    res.status(200).json(await response.json());
+  } else {
+    console.error(response);
+    res.status(response.status).json(response.statusText);
   }
 };

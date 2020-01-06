@@ -6,7 +6,7 @@ import { useState } from 'react';
 import Skeleton from 'common/Skeleton';
 import doFetch from 'utils/doFetch';
 import setCookie from 'utils/setCookie';
-import { COOKIE_NAME } from 'utils/appConstants';
+import { COOKIE_NAME, IS_DEV } from 'utils/appConstants';
 import { redirectIfLoggedIn } from 'utils/requestHelpers';
 
 const signup = async (e, email, password, passwordVerify, toggleHasError) => {
@@ -105,7 +105,10 @@ const Login = ({ pathname }) => {
 };
 
 Login.getInitialProps = async function (ctx) {
-  await redirectIfLoggedIn(ctx);
+  if (!IS_DEV) {
+    const hasRedirected = await redirectIfLoggedIn(ctx);
+    if (hasRedirected) return {};
+  }
   const { pathname } = ctx;
   return {
     pathname,
