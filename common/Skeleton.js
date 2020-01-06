@@ -9,7 +9,7 @@ const Skeleton = ({ pathname = '', children }) => {
   return (
     <>
       <Head />
-      <Header type="loggedout" className="header" pathname={pathname} />
+      <Header className="header" pathname={pathname} />
       { children }
       <Footer />
     </>

@@ -1,8 +1,12 @@
-import PropTypes from 'prop-types';
 import 'styles/global.css';
+
+import Link from 'next/link';
+import PropTypes from 'prop-types';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCocktail } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
+
+import AppContext from 'utils/AppContext';
 
 const LOGGEDOUT_LINKS = [{
   name: 'login',
@@ -12,11 +16,7 @@ const LOGGEDOUT_LINKS = [{
 
 const ACTIVE_STYLE = 'border rounded text-white border-white bg-gray-600';
 
-export default function Header({ type, pathname }) {
-  let links;
-  if (type === 'loggedout') {
-    links = LOGGEDOUT_LINKS;
-  }
+export default function Header({ pathname }) {
 
   return (
     <nav className="flex bg-gray-200 p-4">
@@ -27,22 +27,33 @@ export default function Header({ type, pathname }) {
             <span className="ml-2">MixApp</span>
           </a>
         </span>
-        <ul className="flex">
-          {links.map((linkObj, i) => (
-            <li className="ml-4" key={i}>
-              <Link
-                href={`/${linkObj.url ? linkObj.url : linkObj.name}`}>
-                <a className={`px-3 py-1 ${pathname.slice(1) === linkObj.name ? ACTIVE_STYLE : ''}`}>{linkObj.name}</a>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <AppContext.Consumer>
+          {ctx => {
+            if (ctx.userInfo && ctx.userInfo.email) {
+              return <h3>Oh hay {ctx.userInfo.email}</h3>;
+            }
+            return (
+              <ul className="flex">
+                {LOGGEDOUT_LINKS.map((linkObj, i) => (
+                  <li className="ml-4" key={i}>
+                    <Link
+                      href={`/${linkObj.url ? linkObj.url : linkObj.name}`}
+                    >
+                      <a className={`px-3 py-1 ${pathname.slice(1) === linkObj.name ? ACTIVE_STYLE : ''}`}>
+                        {linkObj.name}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            );
+          }}
+        </AppContext.Consumer>
       </ul>
     </nav>
   );
 }
 
 Header.propTypes = {
-  type: PropTypes.string.isRequired,
   pathname: PropTypes.string.isRequired,
 };

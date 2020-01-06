@@ -7,13 +7,15 @@
     ],
     "rules": {
         "indent": ["error", 2],
+        "import/prefer-default-export": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/jsx-props-no-spreading": [0, {
             "html": "ignore",
             "custom": "ignore",
             "exceptions": []
         }],
-        "react/jsx-closing-bracket-location": [1, "line-aligned"]
+        "react/jsx-closing-bracket-location": [1, "line-aligned"],
+        "jsx-a11y/anchor-is-valid": "off"
     },
     "globals": {
         "React": "readonly"

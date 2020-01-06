@@ -1,35 +1,34 @@
-import fetch from 'isomorphic-unfetch';
+import unfetch from 'isomorphic-unfetch';
+import https from 'https';
 
-import { API_URL } from 'utils/appConstants';
+import { LOCAL_URL, IS_DEV } from 'utils/appConstants';
 
-const doFetch = function doFetchFn(
-  endpoint,
-  additionalHeaders = {},
-  method = 'GET',
-  additionalData = {},
+const doFetch = function doFetchFn(endpoint, {
+  headers = {},
+  data = {},
   body = {},
-) {
-  const mergedHeaders = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    ...additionalHeaders,
-  };
-  let data = {
+  method = 'GET',
+} = {}) {
+  const reqData = {
     method,
-    mode: 'cors',
     credentials: 'include',
-    headers: mergedHeaders,
-    ...additionalData,
+    headers: {
+      Accept: 'application/json',
+      ...headers,
+    },
+    ...data,
   };
 
-  if (Object.keys(body) > 0 && method !== 'GET') {
-    data = {
-      ...data,
-      body: JSON.stringify(body),
-    };
+  if (method !== 'GET') {
+    // TODO Da fuq, cant have this with a GET ???
+    reqData.headers['Content-Type'] = 'application/json';
   }
-  // return fetch(`${API_URL}${endpoint}`, data);
-  return fetch(`${API_URL}${endpoint}`, data);
+
+  if (Object.keys(body).length > 0 && method !== 'GET') {
+    reqData.body = JSON.stringify(body);
+  }
+
+  return unfetch(`${LOCAL_URL}/api${endpoint}`, reqData);
 };
 
 export default doFetch;
