@@ -31,7 +31,6 @@ const signup = async (e, email, password, passwordVerify, toggleHasError) => {
     if (resp.status === 409) {
       toggleHasError('Sorry, that email already has an account');
     } else {
-      console.log(resp);
       toggleHasError('Oops, something didn\'t work');
     }
   }

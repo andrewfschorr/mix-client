@@ -2,14 +2,13 @@ import doFetch from 'utils/doFetch';
 import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
 export default async (req, res) => {
-  const { name, description } = req.body;
-  const response = await doFetch('/drink', {
+  const searchParams = new URLSearchParams(
+    req.url.slice(req.url.lastIndexOf('?') + 1),
+  );
+  const queryParam = searchParams.get('q');
+  const response = await doFetch(`/drinks${queryParam ? `?q=${queryParam}` : ''}`, {
     method: req.method,
     headers: turnAuthCookieIntoHeader(req.cookies),
-    body: {
-      name,
-      description,
-    },
   }, true);
 
   if (response.status === 200) {

@@ -53,12 +53,12 @@ const Login = ({ pathname }) => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder=""
-              onChange={e=> setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               value={password}
             />
             {hasError
               ? <p className="text-red-500 text-xs italic">{'Oops, something didn\'t work.'}</p>
-              : null }
+              : null}
           </div>
           <div className="flex items-center justify-between">
             <button

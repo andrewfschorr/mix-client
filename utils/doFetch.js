@@ -40,7 +40,7 @@ const doFetch = function doFetchFn(
   if (Object.keys(body).length > 0 && method !== 'GET') {
     reqData.body = JSON.stringify(body);
   }
-  // console.log(method, reqData, callApiServer, endpoint, body);
+
   return unfetch(`${callApiServer ? API_URL : LOCAL_URL}/api${endpoint}`, reqData);
 };
 

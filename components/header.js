@@ -28,9 +28,9 @@ export default function Header({ pathname }) {
           </a>
         </span>
         <AppContext.Consumer>
-          {ctx => {
-            if (ctx.userInfo && ctx.userInfo.email) {
-              return <h3>Oh hay {ctx.userInfo.email}</h3>;
+          {(ctx) => {
+            if (ctx.name && ctx.email) {
+              return <h3>Oh hay {ctx.email}</h3>;
             }
             return (
               <ul className="flex">
