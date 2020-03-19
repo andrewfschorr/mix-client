@@ -10,6 +10,14 @@ import { RouteType } from 'models/types';
 import { redirect } from 'utils/requestHelpers';
 import { COOKIE_NAME } from 'utils/appConstants';
 
+async function removeDrinkFromUser(id: number) {
+	const deleteResponse = await doFetch(`/drink/${id}`, {
+    method: 'DELETE',
+	});
+	deleteResponse.then(resp => resp.json())
+	.then(console.log);
+}
+
 async function submitDrink(e, drinkName, drinkDescription) {
   if (drinkName.trim() === '' || drinkDescription === '') return;
   e.preventDefault();
@@ -19,7 +27,9 @@ async function submitDrink(e, drinkName, drinkDescription) {
       name: drinkName,
       description: drinkDescription
     }
-  });
+	});
+
+	// TODO do something with response
 }
 
 function Index({ pathname, user, drinks }) {
@@ -31,7 +41,7 @@ function Index({ pathname, user, drinks }) {
       <Skeleton pathname={pathname}>
         <div className="w-full main p-6">
           <h2>{`Hello ${user.email}`}</h2>
-          <DrinkList drinks={drinks} />
+          <DrinkList removeDrinkCb={removeDrinkFromUser} drinks={drinks} />
         </div>
         <div className="p-6 m-6 bg-gray-200 border-purple-700">
           <h3 className="pb-3">Add drink</h3>

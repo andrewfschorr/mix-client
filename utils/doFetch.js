@@ -32,12 +32,12 @@ const doFetch = function doFetchFn(
     },
   };
 
-  if (method !== 'GET') {
+  if (method !== 'GET' && method !== 'DELETE') {
     // TODO Da fuq, cant have this with a GET ???
     reqData.headers['Content-Type'] = 'application/json';
   }
 
-  if (Object.keys(body).length > 0 && method !== 'GET') {
+  if (Object.keys(body).length > 0 && method === 'POST') {
     reqData.body = JSON.stringify(body);
   }
 

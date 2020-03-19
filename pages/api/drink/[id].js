@@ -2,19 +2,18 @@ import doFetch from 'utils/doFetch';
 import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
 export default async (req, res) => {
-  if (req.method !== 'POST') {
+  if (req.method !== 'DELETE') {
     throw new Error(`${req.method} not supported for /drink`);
   }
-  const { name, description } = req.body;
-  const response = await doFetch('/drink', {
-    method: 'POST',
+  const {
+    query: { id },
+  } = req;
+  // res.end(`Post: ${id}`)
+  const response = await doFetch(`/drink/${id}`, {
+    method: 'DELETE',
     headers: turnAuthCookieIntoHeader(req.cookies),
-    body: {
-      name,
-      description,
-    },
   }, true);
-
+  console.log(response);
   if (response.status === 200) {
     res.status(200).json(await response.json());
   } else {
