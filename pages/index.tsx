@@ -10,38 +10,46 @@ import { RouteType } from 'models/types';
 import { redirect } from 'utils/requestHelpers';
 import { COOKIE_NAME } from 'utils/appConstants';
 
-async function removeDrinkFromUser(id: number) {
-	const deleteResponse = await doFetch(`/drink/${id}`, {
+async function removeDrinkFromUser(id: number, updateUserDrinks: any) { // TODO update any
+	doFetch(`/drink/${id}`, {
     method: 'DELETE',
+	}).then(resp => resp.json()).then((resp) => {
+		const { drinkRemoved } = resp;
+		updateUserDrinks((drinks) => {
+			return drinks.filter((drink) => drink.id !== drinkRemoved);
+		});
 	});
-	deleteResponse.then(resp => resp.json())
-	.then(console.log);
+
 }
 
-async function submitDrink(e, drinkName, drinkDescription) {
-  if (drinkName.trim() === '' || drinkDescription === '') return;
+async function addDrink(e, drinkToAddName, drinkDescription) {
+  if (drinkToAddName.trim() === '' || drinkDescription === '') return;
   e.preventDefault();
   const drinkResponse = await doFetch('/drink', {
     method: 'POST',
     body: {
-      name: drinkName,
+      name: drinkToAddName,
       description: drinkDescription
     }
 	});
-
 	// TODO do something with response
 }
 
 function Index({ pathname, user, drinks }) {
-  const [drinkName, setDrinkName] = useState('');
-  const [drinkDescription, setDrinkDescripton] = useState('');
+  const [drinkToAddName, setDrinkToAddName] = useState('');
+	const [drinkDescription, setDrinkDescripton] = useState('');
+	const [userDrinks, updateUserDrinks] = useState(drinks);
   const { name, email } = user;
   return (
     <AppContext.Provider value={{ name, email }}>
       <Skeleton pathname={pathname}>
         <div className="w-full main p-6">
           <h2>{`Hello ${user.email}`}</h2>
-          <DrinkList removeDrinkCb={removeDrinkFromUser} drinks={drinks} />
+					<DrinkList
+						removeDrinkCb={removeDrinkFromUser}
+						drinks={userDrinks}
+						updateUserDrinks={updateUserDrinks}
+					/>
         </div>
         <div className="p-6 m-6 bg-gray-200 border-purple-700">
           <h3 className="pb-3">Add drink</h3>
@@ -49,8 +57,8 @@ function Index({ pathname, user, drinks }) {
             <input
               placeholder="drink name"
               type="text"
-              value={drinkName}
-              onChange={e => setDrinkName(e.target.value)}
+              value={drinkToAddName}
+              onChange={e => setDrinkToAddName(e.target.value)}
             />
             <br />
             <textarea
@@ -66,7 +74,7 @@ function Index({ pathname, user, drinks }) {
             <button
               className="mt-4 border-2 border-blue-500 "
               type="submit"
-              onClick={e => submitDrink(e, drinkName, drinkDescription)}
+              onClick={e => addDrink(e, drinkToAddName, drinkDescription)}
             >
               Submit
             </button>

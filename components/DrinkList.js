@@ -1,6 +1,5 @@
 import doFetch from 'utils/doFetch.js';
 import Async from 'react-select/async';
-// import 'react-select/dist/react-select.css';
 import { useState } from 'react';
 
 const loadOptions = (inputVal, callBack) => {
@@ -13,8 +12,16 @@ const loadOptions = (inputVal, callBack) => {
     }))).then(callBack);
 };
 
-const DrinkList = ({ drinks, removeDrinkCb }) => {
-  const [selectedDrink, updateSelectedDrink] = useState(null);
+const matchDrink = (id, updateUserDrinks) => {
+  doFetch(`/drink/${id}`, {
+    method: 'POST',
+  }).then((resp) => resp.json()).then((response) => {
+    updateUserDrinks((drinks) => drinks.concat(response.drink));
+  });
+};
+
+const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
+  const [selectedDrinkId, updateSelectedDrink] = useState(null);
   // the drinks the user already has checked in
   const drinksMap = drinks.reduce((acc, cur) => {
     acc[cur.id] = true;
@@ -29,13 +36,14 @@ const DrinkList = ({ drinks, removeDrinkCb }) => {
             <li key={drink.name} className="flex border-solid border-b-2 border-gray-600 py-1">
               {drink.name}
               <span onClick={(e) => {
-                removeDrinkCb(drink.id);
+                removeDrinkCb(drink.id, updateUserDrinks);
               }} style={{ marginLeft: 'auto' }}>x</span>
             </li>
           );
         }) : null}
       </ul>
       <h4 className="my-4">Add Drink</h4>
+      <p>selected drink is is {selectedDrinkId}</p>
       <div className="flex">
         <Async
           className="w-full"
@@ -46,7 +54,7 @@ const DrinkList = ({ drinks, removeDrinkCb }) => {
             if (actionData.action === 'clear') {
               updateSelectedDrink(null);
             } else {
-              updateSelectedDrink(itemSelection.value);
+              updateSelectedDrink(itemSelection.id);
             }
           }}
           isClearable
@@ -60,10 +68,14 @@ const DrinkList = ({ drinks, removeDrinkCb }) => {
           }}
         />
         <button
-          disabled={!selectedDrink}
+          disabled={selectedDrinkId === null}
           type="button"
+          onClick={(e) => {
+            if (selectedDrinkId === null) return;
+            matchDrink(selectedDrinkId, updateUserDrinks);
+          }}
           className={
-            `${selectedDrink ? ' ' : 'opacity-50 cursor-not-allowed '}bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`
+            `${selectedDrinkId === null ? 'opacity-50 cursor-not-allowed ' : ' '}bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`
           }>
           Add
         </button>

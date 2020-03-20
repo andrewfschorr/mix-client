@@ -32,16 +32,14 @@ const doFetch = function doFetchFn(
     },
   };
 
-  if (method !== 'GET' && method !== 'DELETE') {
-    // TODO Da fuq, cant have this with a GET ???
+  if (method === 'POST' && Object.keys(body).length > 0) {
     reqData.headers['Content-Type'] = 'application/json';
   }
 
   if (Object.keys(body).length > 0 && method === 'POST') {
     reqData.body = JSON.stringify(body);
   }
-
-  return unfetch(`${callApiServer ? API_URL : LOCAL_URL}/api${endpoint}`, reqData);
+  return unfetch(`${callApiServer ? API_URL : LOCAL_URL}/api${endpoint}`, reqData).catch(console.log);
 };
 
 export default doFetch;
