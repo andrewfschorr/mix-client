@@ -39,6 +39,7 @@ const signup = async (e, email, password, passwordVerify, toggleHasError) => {
 const Login = ({ pathname }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [accessCode, setAccessCode] = useState('');
   const [passwordVerify, setPasswordVerify] = useState('');
   const [hasError, toggleHasError] = useState(false);
 
@@ -58,7 +59,20 @@ const Login = ({ pathname }) => {
               type="text"
               placeholder="andrew@mixapp.com"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="accessCode">
+              Access Code
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="accessCode"
+              type="text"
+              placeholder=""
+              value={accessCode}
+              onChange={(e) => setAccessCode(e.target.value)}
             />
           </div>
           <div>
@@ -86,7 +100,7 @@ const Login = ({ pathname }) => {
               value={passwordVerify}
               onChange={e => setPasswordVerify(e.target.value)}
             />
-            {hasError ? <p className="text-red-500 text-xs italic">{ hasError }</p> : null}
+            {hasError ? <p className="text-red-500 text-xs italic">{hasError}</p> : null}
           </div>
           <div className="flex items-center justify-center">
             <button
