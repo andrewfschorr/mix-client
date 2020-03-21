@@ -1,4 +1,3 @@
-import 'styles/global.css';
 import { useState } from 'react';
 
 import doFetch from 'utils/doFetch';

@@ -4,7 +4,7 @@ import cookies from 'next-cookies';
 import doFetch from 'utils/doFetch';
 import { COOKIE_NAME } from 'utils/appConstants';
 
-export const turnAuthCookieIntoHeader = function(cookies) {
+export const turnAuthCookieIntoHeader = function (cookies) {
   const authToken = cookies[COOKIE_NAME];
   return {
     Authorization: `Bearer ${authToken}`,
@@ -36,6 +36,7 @@ export const redirectIfLoggedIn = async (ctx) => {
       ...additionalHeaders,
     },
   });
+
   if (userInfoResponse.status === 200) {
     redirect(ctx, '/');
     return true;

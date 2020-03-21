@@ -1,5 +1,3 @@
-import 'styles/global.css';
-
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 

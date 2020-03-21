@@ -1,5 +1,3 @@
-import 'styles/global.css';
-
 import Router from 'next/router';
 import { useState } from 'react';
 

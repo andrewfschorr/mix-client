@@ -1,4 +1,3 @@
-import 'styles/global.css';
 import doFetch from 'utils/doFetch.js';
 import Skeleton from 'common/Skeleton';
 import cookies from 'next-cookies';
@@ -9,6 +8,8 @@ import { useState } from 'react';
 import { RouteType } from 'models/types';
 import { redirect } from 'utils/requestHelpers';
 import { COOKIE_NAME } from 'utils/appConstants';
+
+// import styles from './foo.module.css';
 
 async function removeDrinkFromUser(id: number, updateUserDrinks: any) { // TODO update any
 	doFetch(`/drink/${id}`, {
@@ -44,7 +45,8 @@ function Index({ pathname, user, drinks }) {
     <AppContext.Provider value={{ name, email }}>
       <Skeleton pathname={pathname}>
         <div className="w-full main p-6">
-          <h2>{`Hello ${user.email}`}</h2>
+          {/* <h2 className={styles.bar}>{`Hello ${user.email}`}</h2> */}
+					<h2>{`Hello ${user.email}`}</h2>
 					<DrinkList
 						removeDrinkCb={removeDrinkFromUser}
 						drinks={userDrinks}
