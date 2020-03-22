@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Header from 'components/Header';
 import Head from 'common/Head';
-import Footer from '../common/Footer';
+import Footer from 'common/Footer';
 
 const Skeleton = ({ pathname = '', children }) => {
   return (
