@@ -15,7 +15,7 @@ const LOGGEDOUT_LINKS = [{
 
 const ACTIVE_STYLE = 'border rounded text-white border-white bg-gray-600';
 
-export default function Header({ pathname }) {
+export default function Navigation({ pathname }) {
 
   return (
     <nav className="flex bg-gray-200 p-4">
@@ -53,6 +53,6 @@ export default function Header({ pathname }) {
   );
 }
 
-Header.propTypes = {
+Navigation.propTypes = {
   pathname: PropTypes.string.isRequired,
 };

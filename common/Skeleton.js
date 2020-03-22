@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Header from 'components/Header';
+import Navigation from 'components/Navigation';
 import Head from './Head';
 import Footer from './Foot';
 
@@ -9,7 +9,7 @@ const Skeleton = ({ pathname = '', children }) => {
   return (
     <>
       <Head />
-      <Header className="header" pathname={pathname} />
+      <Navigation className="header" pathname={pathname} />
       { children }
       <Footer />
     </>
