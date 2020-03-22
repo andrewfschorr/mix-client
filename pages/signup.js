@@ -7,7 +7,7 @@ import setCookie from 'utils/setCookie';
 import { COOKIE_NAME, IS_DEV } from 'utils/appConstants';
 import { redirectIfLoggedIn } from 'utils/requestHelpers';
 
-const signup = async (e, email, password, passwordVerify, toggleHasError) => {
+const signup = async (e, email, password, passwordVerify, accessCode, toggleHasError) => {
   e.preventDefault();
   if (password !== passwordVerify) {
     toggleHasError('Oops, passwords don\'t seem to match');
@@ -18,6 +18,7 @@ const signup = async (e, email, password, passwordVerify, toggleHasError) => {
     body: {
       email,
       password,
+      accessCode,
     },
   });
 
@@ -67,7 +68,7 @@ const Login = ({ pathname }) => {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="accessCode"
-              type="text"
+              type="password"
               placeholder=""
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value)}
@@ -104,7 +105,7 @@ const Login = ({ pathname }) => {
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
-              onClick={e => signup(e, email, password, passwordVerify, toggleHasError)}
+              onClick={e => signup(e, email, password, passwordVerify, accessCode, toggleHasError)}
             >
               Sign up
             </button>

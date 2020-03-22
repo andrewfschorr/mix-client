@@ -11,10 +11,10 @@ module.exports = function (phase, { defaultConfig }) {
   const isStaging = PHASE_PRODUCTION_BUILD && process.env.STAGING === '1';
   return {
     env: {
-      API_URL: 'https://mixapp.test',
-      COOKIE_NAME: 'whiskyNeat',
-      LOCAL_URL: 'http://localhost:3000',
-      IS_DEV: true,
+      API_URL: process.env.API_URL,
+      COOKIE_NAME: process.env.COOKIE_NAME,
+      LOCAL_URL: process.env.LOCAL_URL,
+      IS_DEV: isDev,
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
       const resolveModulesPaths = [
@@ -25,25 +25,3 @@ module.exports = function (phase, { defaultConfig }) {
     },
   };
 };
-
-// module.exports = withCSS({
-//   cssModules: true,
-//   env: {
-//     API_URL: '@api-url',
-//     COOKIE_NAME: '@cookie-name',
-//     LOCAL_URL: '@local-url',
-//     IS_DEV: process.env.NODE_ENV === 'development',
-//     // API_URL: 'https://mixapp.test',
-//     // COOKIE_NAME: 'whiskyNeat',
-//     // LOCAL_URL: 'http://localhost:3000',
-//     // IS_DEV: true,
-//   },
-//   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-//     const resolveModulesPaths = [
-//       path.resolve('./'),
-//     ];
-//     config.resolve.modules.push(...resolveModulesPaths);
-//     return config;
-//   },
-// });
-

@@ -1,13 +1,14 @@
 import doFetch from 'utils/doFetch';
 
 export default async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, accessCode } = req.body;
 
   const response = await doFetch('/signup', {
     method: req.method,
     body: {
       password,
       email,
+      accessCode,
     },
   }, true);
 
