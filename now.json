@@ -5,5 +5,10 @@
       "LOCAL_URL": "@local-url",
       "COOKIE_NAME": "@cookie-name"
     }
+  },
+  "env": {
+    "API_URL": "@api-url",
+    "LOCAL_URL": "@local-url",
+    "COOKIE_NAME": "@cookie-name"
   }
 }
