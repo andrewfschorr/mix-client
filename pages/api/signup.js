@@ -11,7 +11,6 @@ export default async (req, res) => {
       accessCode,
     },
   }, true);
-
   if (response.status === 200) {
     res.status(200).json(await response.json());
   } else {
