@@ -19,7 +19,6 @@ module.exports = function (phase, { defaultConfig }) {
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
       const resolveModulesPaths = [
         path.resolve('./'),
-        path.join(__dirname),
       ];
       config.resolve.modules.push(...resolveModulesPaths);
       return config;
