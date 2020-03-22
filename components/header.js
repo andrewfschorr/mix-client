@@ -12,6 +12,7 @@ const LOGGEDOUT_LINKS = [{
   name: 'signup',
 }];
 
+
 const ACTIVE_STYLE = 'border rounded text-white border-white bg-gray-600';
 
 export default function Header({ pathname }) {
