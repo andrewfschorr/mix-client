@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import Header from 'components/Header';
-// import Head from '/head';
-// import Footer from './footer';
 import Header from 'components/Header';
-import Head from './HeaderThing';
-import Footer from './Footer';
+import Head from './Head';
+import Footer from './Foot';
 
 const Skeleton = ({ pathname = '', children }) => {
   return (
