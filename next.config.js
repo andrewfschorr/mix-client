@@ -12,13 +12,14 @@ module.exports = function (phase, { defaultConfig }) {
   return {
     env: {
       API_URL: process.env.API_URL,
-      COOKIE_NAME: process.env.COOKIE_NAME,
+      COOKIE_NAME: process.env.API_URL,
       LOCAL_URL: process.env.LOCAL_URL,
       IS_DEV: isDev,
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
       const resolveModulesPaths = [
         path.resolve('./'),
+        path.join(__dirname),
       ];
       config.resolve.modules.push(...resolveModulesPaths);
       return config;
