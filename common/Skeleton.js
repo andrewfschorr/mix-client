@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Header from 'components/Header';
+import Header from 'components/header';
 // import Head from 'common/head';
 // import Footer from 'common/footer';
 
