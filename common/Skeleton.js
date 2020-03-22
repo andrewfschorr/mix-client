@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Header from 'components/Header';
 import Head from 'common/Head';
-import Footer from 'common/Footer';
+import Poop from 'common/Poop';
 
 const Skeleton = ({ pathname = '', children }) => {
   return (
@@ -11,7 +11,7 @@ const Skeleton = ({ pathname = '', children }) => {
       <Head />
       <Header className="header" pathname={pathname} />
       { children }
-      <Footer />
+      <Poop />
     </>
   );
 };
