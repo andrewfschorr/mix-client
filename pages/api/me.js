@@ -21,7 +21,6 @@ export default async (req, res) => {
   if (response.status === 200) {
     res.status(200).json(await response.json());
   } else {
-    console.error(response);
     res.status(response.status).json(response.statusText);
   }
 };

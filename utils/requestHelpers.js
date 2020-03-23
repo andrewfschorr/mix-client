@@ -26,7 +26,7 @@ export const redirect = ({ res }, location) => {
 export const redirectIfLoggedIn = async (ctx) => {
   const cooks = cookies(ctx);
   const authToken = cooks[COOKIE_NAME];
-
+  if (typeof authToken === 'undefined') return false;
   // TODO do i need to deal with requests from the clinet in any specific way?
   const additionalHeaders = ctx.req ? {
     cookie: `${COOKIE_NAME}=${authToken}`,

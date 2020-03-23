@@ -38,8 +38,8 @@ const doFetch = function doFetchFn(
 
   if (Object.keys(body).length > 0 && method === 'POST') {
     reqData.body = JSON.stringify(body);
-	}
-  return unfetch(`${callApiServer ? API_URL : LOCAL_URL}/api${endpoint}`, reqData);
+  }
+  return unfetch(`${callApiServer ? API_URL : ''}/api${endpoint}`, reqData);
 };
 
 export default doFetch;

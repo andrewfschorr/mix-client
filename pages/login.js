@@ -18,6 +18,7 @@ const logUserIn = async (e, email, password, toggleHasError) => {
   });
   if (resp.status === 200) {
     const data = await resp.json();
+    console.log(COOKIE_NAME);
     setCookie({ [COOKIE_NAME]: data.access_token });
     redirect({}, '/');
   } else {
@@ -80,10 +81,9 @@ const Login = ({ pathname }) => {
 };
 
 Login.getInitialProps = async function (ctx) {
-  if (!IS_DEV) {
-    const hasRedirected = await redirectIfLoggedIn(ctx);
-    if (hasRedirected) return {};
-  }
+
+  const hasRedirected = await redirectIfLoggedIn(ctx);
+  if (hasRedirected) return {};
   const { pathname } = ctx;
   return {
     pathname,

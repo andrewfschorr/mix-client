@@ -117,10 +117,8 @@ const Login = ({ pathname }) => {
 };
 
 Login.getInitialProps = async function (ctx) {
-  if (!IS_DEV) {
-    const hasRedirected = await redirectIfLoggedIn(ctx);
-    if (hasRedirected) return {};
-  }
+  const hasRedirected = await redirectIfLoggedIn(ctx);
+  if (hasRedirected) return {};
   const { pathname } = ctx;
   return {
     pathname,

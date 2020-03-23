@@ -12,7 +12,7 @@ module.exports = function (phase, { defaultConfig }) {
   return {
     env: {
       API_URL: process.env.API_URL,
-      COOKIE_NAME: process.env.API_URL,
+      COOKIE_NAME: process.env.COOKIE_NAME,
       LOCAL_URL: process.env.LOCAL_URL,
       IS_DEV: isDev,
     },
