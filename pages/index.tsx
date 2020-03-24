@@ -40,9 +40,9 @@ function Index({ pathname, user, drinks }) {
   const [drinkToAddName, setDrinkToAddName] = useState('');
 	const [drinkDescription, setDrinkDescripton] = useState('');
 	const [userDrinks, updateUserDrinks] = useState(drinks);
-  const { name, email } = user;
+  const { email } = user;
   return (
-    <AppContext.Provider value={{ name, email }}>
+    <AppContext.Provider value={{ email }}>
       <Skeleton pathname={pathname}>
         <div className="w-full main p-6">
           {/* <h2 className={styles.bar}>{`Hello ${user.email}`}</h2> */}
@@ -109,10 +109,9 @@ Index.getInitialProps = async ctx => {
     redirect(ctx, '/login');
   }
   const user = await userInfoResponse.json();
-  const { name, email, drinks } = user;
+  const { email, drinks } = user;
   return {
     user: {
-      name,
       email
     },
     drinks

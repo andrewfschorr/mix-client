@@ -18,7 +18,6 @@ const logUserIn = async (e, email, password, toggleHasError) => {
   });
   if (resp.status === 200) {
     const data = await resp.json();
-    console.log(COOKIE_NAME);
     setCookie({ [COOKIE_NAME]: data.access_token });
     redirect({}, '/');
   } else {

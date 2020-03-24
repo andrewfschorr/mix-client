@@ -11,7 +11,7 @@ export const turnAuthCookieIntoHeader = function (cookies) {
   };
 };
 
-export const redirect = ({ res }, location) => {
+export const redirect = ({ res, req }, location) => {
   if (res) {
     res.writeHead(302, {
       Location: location || '/',
@@ -31,6 +31,8 @@ export const redirectIfLoggedIn = async (ctx) => {
   const additionalHeaders = ctx.req ? {
     cookie: `${COOKIE_NAME}=${authToken}`,
   } : {};
+
+
   const userInfoResponse = await doFetch('/me', {
     headers: {
       ...additionalHeaders,

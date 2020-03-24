@@ -1,7 +1,7 @@
 import unfetch from 'isomorphic-unfetch';
 import https from 'https';
 
-import { LOCAL_URL, API_URL, IS_DEV } from 'utils/appConstants';
+import { API_URL, IS_DEV } from 'utils/appConstants';
 
 const doFetch = function doFetchFn(
   endpoint,
@@ -39,7 +39,11 @@ const doFetch = function doFetchFn(
   if (Object.keys(body).length > 0 && method === 'POST') {
     reqData.body = JSON.stringify(body);
   }
-  return unfetch(`${callApiServer ? API_URL : ''}/api${endpoint}`, reqData);
+
+  // TODO this is shitty
+  const localUrl = IS_DEV ? 'http://localhost:3000' : 'https://topofshelf.com';
+
+  return unfetch(`${callApiServer ? API_URL : localUrl}/api${endpoint}`, reqData);
 };
 
 export default doFetch;

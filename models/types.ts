@@ -10,6 +10,6 @@ export interface CookieType {
 }
 
 export interface AppContextInterface {
-  name: string;
+  // name: string; this is never used
   email: string;
 }

@@ -28,7 +28,7 @@ export default function Navigation({ pathname }) {
         </span>
         <AppContext.Consumer>
           {(ctx) => {
-            if (ctx.name && ctx.email) {
+            if (ctx.email) {
               return <h3>Oh hay {ctx.email}</h3>;
             }
             return (
