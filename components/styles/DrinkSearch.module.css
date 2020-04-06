@@ -1,0 +1,11 @@
+.noResults {
+  font-size: 14px;
+  justify-content: center;
+  display: flex;
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.noResultsAnchor {
+  text-decoration: underline;
+}

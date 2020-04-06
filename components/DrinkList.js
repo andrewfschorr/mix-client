@@ -1,4 +1,4 @@
-import doFetch from 'utils/doFetch.js';
+import doFetch from 'utils/doFetch';
 import Async from 'react-select/async';
 import { useState } from 'react';
 

@@ -19,7 +19,7 @@ export default function Navigation({ pathname }) {
 
   return (
     <nav className="flex bg-gray-200 p-4">
-      <ul className="flex w-full">
+      <ul className="flex w-full container mx-auto">
         <span className="flex-grow">
           <a href="/" className="logo">
             <FontAwesomeIcon icon={faCocktail} width="18" height="16" style={{ display: 'inline-block' }} />

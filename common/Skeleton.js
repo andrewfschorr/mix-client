@@ -10,7 +10,7 @@ const Skeleton = ({ pathname = '', children }) => {
     <>
       <Head />
       <Navigation className="header" pathname={pathname} />
-      { children }
+      {children}
       <Footer />
     </>
   );

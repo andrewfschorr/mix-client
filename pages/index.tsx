@@ -3,13 +3,14 @@ import Skeleton from 'common/Skeleton';
 import cookies from 'next-cookies';
 import AppContext from 'utils/AppContext';
 import protectedRoute from 'utils/protectedRoute';
-import DrinkList from 'components/DrinkList';
+// import DrinkList from 'components/DrinkList';
+import DrinkSearch from 'components/DrinkSearch';
 import { useState } from 'react';
 import { RouteType } from 'models/types';
 import { redirect } from 'utils/requestHelpers';
 import { COOKIE_NAME } from 'utils/appConstants';
 
-// import styles from './foo.module.css';
+import styles from './foo.module.css';
 
 async function removeDrinkFromUser(id: number, updateUserDrinks: any) { // TODO update any
 	doFetch(`/drink/${id}`, {
@@ -44,43 +45,41 @@ function Index({ pathname, user, drinks }) {
   return (
     <AppContext.Provider value={{ email }}>
       <Skeleton pathname={pathname}>
-        <div className="w-full main p-6">
-          {/* <h2 className={styles.bar}>{`Hello ${user.email}`}</h2> */}
-					<h2>{`Hello ${user.email}`}</h2>
-					<DrinkList
+        <div className={`w-full main p-6 container mx-auto`}>
+          <DrinkSearch
 						removeDrinkCb={removeDrinkFromUser}
 						drinks={userDrinks}
 						updateUserDrinks={updateUserDrinks}
 					/>
-        </div>
-        <div className="p-6 m-6 bg-gray-200 border-purple-700">
-          <h3 className="pb-3">Add drink</h3>
-          <form>
-            <input
-              placeholder="drink name"
-              type="text"
-              value={drinkToAddName}
-              onChange={e => setDrinkToAddName(e.target.value)}
-            />
-            <br />
-            <textarea
-              placeholder="description"
-              className="w-full mt-4"
-              name=""
-              id=""
-              rows={3}
-              value={drinkDescription}
-              onChange={e => setDrinkDescripton(e.target.value)}
-            ></textarea>
-            <br />
-            <button
-              className="mt-4 border-2 border-blue-500 "
-              type="submit"
-              onClick={e => addDrink(e, drinkToAddName, drinkDescription)}
-            >
-              Submit
-            </button>
-          </form>
+          {/* <div className="p-6 m-6 bg-gray-200 border-purple-700">
+            <h3 className="pb-3">Add drink</h3>
+            <form>
+              <input
+                placeholder="drink name"
+                type="text"
+                value={drinkToAddName}
+                onChange={e => setDrinkToAddName(e.target.value)}
+              />
+              <br />
+              <textarea
+                placeholder="description"
+                className="w-full mt-4"
+                name=""
+                id=""
+                rows={3}
+                value={drinkDescription}
+                onChange={e => setDrinkDescripton(e.target.value)}
+              ></textarea>
+              <br />
+              <button
+                className="mt-4 border-2 border-blue-500 "
+                type="submit"
+                onClick={e => addDrink(e, drinkToAddName, drinkDescription)}
+              >
+                Submit
+              </button>
+            </form>
+          </div> */}
         </div>
       </Skeleton>
     </AppContext.Provider>
