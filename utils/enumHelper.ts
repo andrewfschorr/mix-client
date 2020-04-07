@@ -4,6 +4,10 @@ export function enumKeys <E>(enumeration: E): string[] {
   return Object.keys(enumeration).filter(key => typeof enumeration[key] === 'number');
 }
 
+export function enumValues <E>(enumeration: E): string[] {
+  return Object.keys(enumeration).filter(key => typeof enumeration[key] === 'string');
+}
+
 // export function enumValues(u: Units): string[] {
 //   const keys = enumKeys(u);
 //   return keys.map(u => Units[u as any]);

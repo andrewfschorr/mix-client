@@ -1,9 +1,10 @@
 import { COOKIE_NAME } from 'utils/appConstants';
 
 export interface Ingredient{
-  ingredient: string,
+  name: string,
   unit: number, // Units enum below
-  amount: string,
+  amount: string, // needs to be a string to support something like 3/4
+  isNew?: boolean,
 }
 
 export enum RouteType {
