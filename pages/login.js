@@ -1,10 +1,11 @@
 import { useState } from 'react';
-
 import doFetch from 'utils/doFetch';
 import setCookie from 'utils/setCookie';
 import Skeleton from 'common/Skeleton';
-import { redirectIfLoggedIn, redirect } from 'utils/requestHelpers';
-import { COOKIE_NAME, IS_DEV } from 'utils/appConstants';
+import { redirect } from 'utils/requestHelpers';
+import { COOKIE_NAME } from 'utils/appConstants';
+import cookies from 'next-cookies';
+import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt.ts';
 
 const logUserIn = async (e, email, password, toggleHasError) => {
   e.preventDefault();
@@ -79,14 +80,15 @@ const Login = ({ pathname }) => {
   );
 };
 
-Login.getInitialProps = async function (ctx) {
-
-  const hasRedirected = await redirectIfLoggedIn(ctx);
-  if (hasRedirected) return {};
+Login.getInitialProps = function (ctx) {
+  const jwt = cookies(ctx)[COOKIE_NAME];
+  const userInfo = getAuthedUserFromJwt(jwt);
+  if (userInfo) {
+    redirect(ctx, '/');
+    return {};
+  }
   const { pathname } = ctx;
-  return {
-    pathname,
-  };
+  return { pathname };
 };
 
 export default Login;

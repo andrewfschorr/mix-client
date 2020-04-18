@@ -1,11 +1,12 @@
 import Router from 'next/router';
 import { useState } from 'react';
-
 import Skeleton from 'common/Skeleton';
 import doFetch from 'utils/doFetch';
 import setCookie from 'utils/setCookie';
-import { COOKIE_NAME, IS_DEV } from 'utils/appConstants';
-import { redirectIfLoggedIn } from 'utils/requestHelpers';
+import { COOKIE_NAME, } from 'utils/appConstants';
+import { redirect } from 'utils/requestHelpers';
+import cookies from 'next-cookies';
+import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt.ts';
 
 const signup = async (e, email, password, passwordVerify, accessCode, toggleHasError) => {
   e.preventDefault();
@@ -117,12 +118,14 @@ const Login = ({ pathname }) => {
 };
 
 Login.getInitialProps = async function (ctx) {
-  const hasRedirected = await redirectIfLoggedIn(ctx);
-  if (hasRedirected) return {};
+  const jwt = cookies(ctx)[COOKIE_NAME];
+  const userInfo = getAuthedUserFromJwt(jwt);
+  if (userInfo) {
+    redirect(ctx, '/');
+    return {};
+  }
   const { pathname } = ctx;
-  return {
-    pathname,
-  };
+  return { pathname };
 };
 
 export default Login;

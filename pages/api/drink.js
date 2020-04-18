@@ -5,13 +5,14 @@ export default async (req, res) => {
   if (req.method !== 'POST') {
     throw new Error(`${req.method} not supported for /drink`);
   }
-  const { name, description } = req.body;
+  const { name, description, ingredients } = req.body;
   const response = await doFetch('/drink', {
     method: 'POST',
     headers: turnAuthCookieIntoHeader(req.cookies),
     body: {
       name,
       description,
+      ingredients,
     },
   }, true);
 

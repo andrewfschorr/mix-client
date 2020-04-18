@@ -5,19 +5,24 @@ import { useState } from 'react';
 const loadOptions = (inputVal, callBack) => {
   doFetch(`/drinks${inputVal.trim() ? `?q=${inputVal}` : ''}`)
     .then((resp) => resp.json())
-    .then((resp) => resp.map((drink) => ({
-      value: drink.name,
-      label: drink.name,
-      id: drink.id,
-    }))).then(callBack);
+    .then((resp) =>
+      resp.map((drink) => ({
+        value: drink.name,
+        label: drink.name,
+        id: drink.id,
+      }))
+    )
+    .then(callBack);
 };
 
-const matchDrink = (id, updateUserDrinks) => {
-  doFetch(`/drink/${id}`, {
+const addToShelf = (id, updateUserDrinks) => {
+  doFetch(`/shelf/${id}`, {
     method: 'POST',
-  }).then((resp) => resp.json()).then((response) => {
-    updateUserDrinks((drinks) => drinks.concat(response.drink));
-  });
+  })
+    .then((resp) => resp.json())
+    .then((response) => {
+      updateUserDrinks((drinks) => drinks.concat(response.drink));
+    });
 };
 
 const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
@@ -31,16 +36,26 @@ const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
   return (
     <div>
       <ul>
-        {drinks.length ? drinks.map((drink) => {
-          return (
-            <li key={drink.name} className="flex border-solid border-b-2 border-gray-600 py-1">
-              {drink.name}
-              <span onClick={(e) => {
-                removeDrinkCb(drink.id, updateUserDrinks);
-              }} style={{ marginLeft: 'auto' }}>x</span>
-            </li>
-          );
-        }) : null}
+        {drinks.length
+          ? drinks.map((drink) => {
+              return (
+                <li
+                  key={drink.name}
+                  className="flex border-solid border-b-2 border-gray-600 py-1"
+                >
+                  {drink.name}
+                  <span
+                    onClick={(e) => {
+                      removeDrinkCb(drink.id, updateUserDrinks);
+                    }}
+                    style={{ marginLeft: 'auto' }}
+                  >
+                    x
+                  </span>
+                </li>
+              );
+            })
+          : null}
       </ul>
       <h4 className="my-4">Add Drink</h4>
       <p>selected drink is is {selectedDrinkId}</p>
@@ -58,8 +73,11 @@ const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
             }
           }}
           isClearable
-          filterOption={(responseItem, ) => {
-            if (typeof responseItem.data !== 'object' || responseItem.data === null) {
+          filterOption={(responseItem) => {
+            if (
+              typeof responseItem.data !== 'object' ||
+              responseItem.data === null
+            ) {
               console.warn('Inavlid response drink object');
               return false;
             }
@@ -72,11 +90,12 @@ const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
           type="button"
           onClick={(e) => {
             if (selectedDrinkId === null) return;
-            matchDrink(selectedDrinkId, updateUserDrinks);
+            addToShelf(selectedDrinkId, updateUserDrinks);
           }}
-          className={
-            `${selectedDrinkId === null ? 'opacity-50 cursor-not-allowed ' : ' '}bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`
-          }>
+          className={`${
+            selectedDrinkId === null ? 'opacity-50 cursor-not-allowed ' : ' '
+          }bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+        >
           Add
         </button>
       </div>

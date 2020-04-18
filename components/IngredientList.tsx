@@ -41,6 +41,8 @@ const IngredientList = ({
   amount = '',
   unit = 1, // TODO figure out better way to do this
   name = '',
+  changeIngredients,
+  ingredientSubmissionError,
 }): JSX.Element => {
   const [ingredientsList, setIngredientsList] = useState<Ingredient[]>([]);
   const [ingredientToAdd, setIngredientToAdd] = useState<Ingredient>({
@@ -66,6 +68,7 @@ const IngredientList = ({
     } else if (!hasNewIngredient) {
       setValidationErrors((validationErrors) => validationErrors.filter(e => e.type !== NEW_INGREDIENT_WARNING));
     }
+    changeIngredients(ingredientsList);
   }, [ingredientsList]);
 
   return (
@@ -89,7 +92,8 @@ const IngredientList = ({
           })}
         </ul>
       ) : (
-        <h3 className="my-6">
+        //
+        <h3 className={`my-6 ${ingredientSubmissionError ? 'py-4 px-2 bg-red-200 rounded border border-red-400' : ''}`}>
           This drink doesn't seem to have a recipe 😕 - add ingredients below.
         </h3>
       )}
@@ -173,7 +177,7 @@ const IngredientList = ({
             defaultOptions
             loadOptions={loadOptions}
             onChange={(e) => {
-              const isNew = e.__isNew__;
+              const isNew = e.__isNew__ || false;
               const name = e.value;
               setIngredientToAdd((ingredientToAdd) => ({
                 ...ingredientToAdd,

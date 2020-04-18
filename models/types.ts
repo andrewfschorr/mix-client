@@ -1,15 +1,16 @@
 import { COOKIE_NAME } from 'utils/appConstants';
 
-export interface Ingredient{
+export interface Drink {
+  ingredients: Ingredient[],
+  name: string,
+  description: string,
+}
+
+export interface Ingredient {
   name: string,
   unit: number, // Units enum below
   amount: string, // needs to be a string to support something like 3/4
   isNew?: boolean,
-}
-
-export enum RouteType {
-  LoggedIn,
-  LoggedOut
 }
 
 export interface CookieType {
@@ -17,8 +18,9 @@ export interface CookieType {
 }
 
 export interface AppContextInterface {
-  // name: string; this is never used
   email: string;
+  name: string;
+  userId: number;
 }
 
 export enum Units {

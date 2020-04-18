@@ -15,7 +15,8 @@
             "exceptions": []
         }],
         "react/jsx-closing-bracket-location": [1, "line-aligned"],
-        "jsx-a11y/anchor-is-valid": "off"
+        "jsx-a11y/anchor-is-valid": "off",
+        "no-return-assign": 0
     },
     "globals": {
         "React": "readonly"

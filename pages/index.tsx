@@ -2,18 +2,15 @@ import doFetch from 'utils/doFetch.js';
 import Skeleton from 'common/Skeleton';
 import cookies from 'next-cookies';
 import AppContext from 'utils/AppContext';
-import protectedRoute from 'utils/protectedRoute';
-// import DrinkList from 'components/DrinkList';
 import DrinkSearch from 'components/DrinkSearch';
 import { useState } from 'react';
-import { RouteType } from 'models/types';
-import { redirect } from 'utils/requestHelpers';
 import { COOKIE_NAME } from 'utils/appConstants';
+import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt';
 
-import styles from './foo.module.css';
+// import styles from './foo.module.css';
 
-async function removeDrinkFromUser(id: number, updateUserDrinks: any) { // TODO update any
-	doFetch(`/drink/${id}`, {
+async function removeFromShelf(id: number, updateUserDrinks: any) { // TODO update any
+	doFetch(`/shelf/${id}`, {
     method: 'DELETE',
 	}).then(resp => resp.json()).then((resp) => {
 		const { drinkRemoved } = resp;
@@ -24,62 +21,21 @@ async function removeDrinkFromUser(id: number, updateUserDrinks: any) { // TODO 
 
 }
 
-async function addDrink(e, drinkToAddName, drinkDescription) {
-  if (drinkToAddName.trim() === '' || drinkDescription === '') return;
-  e.preventDefault();
-  const drinkResponse = await doFetch('/drink', {
-    method: 'POST',
-    body: {
-      name: drinkToAddName,
-      description: drinkDescription
-    }
-	});
-	// TODO do something with response
-}
-
-function Index({ pathname, user, drinks }) {
-  const [drinkToAddName, setDrinkToAddName] = useState('');
-	const [drinkDescription, setDrinkDescripton] = useState('');
+function Index({ pathname, userInfo, drinks }) {
+  console.log({...userInfo});
+  // const [drinkToAddName, setDrinkToAddName] = useState('');
+	// const [drinkDescription, setDrinkDescripton] = useState('');
 	const [userDrinks, updateUserDrinks] = useState(drinks);
-  const { email } = user;
+  // const { email } = user;
   return (
-    <AppContext.Provider value={{ email }}>
+    <AppContext.Provider value={{ ...userInfo }}>
       <Skeleton pathname={pathname}>
         <div className={`w-full main p-6 container mx-auto`}>
           <DrinkSearch
-						removeDrinkCb={removeDrinkFromUser}
+						removeDrinkCb={removeFromShelf}
 						drinks={userDrinks}
 						updateUserDrinks={updateUserDrinks}
 					/>
-          {/* <div className="p-6 m-6 bg-gray-200 border-purple-700">
-            <h3 className="pb-3">Add drink</h3>
-            <form>
-              <input
-                placeholder="drink name"
-                type="text"
-                value={drinkToAddName}
-                onChange={e => setDrinkToAddName(e.target.value)}
-              />
-              <br />
-              <textarea
-                placeholder="description"
-                className="w-full mt-4"
-                name=""
-                id=""
-                rows={3}
-                value={drinkDescription}
-                onChange={e => setDrinkDescripton(e.target.value)}
-              ></textarea>
-              <br />
-              <button
-                className="mt-4 border-2 border-blue-500 "
-                type="submit"
-                onClick={e => addDrink(e, drinkToAddName, drinkDescription)}
-              >
-                Submit
-              </button>
-            </form>
-          </div> */}
         </div>
       </Skeleton>
     </AppContext.Provider>
@@ -87,34 +43,24 @@ function Index({ pathname, user, drinks }) {
 }
 
 Index.getInitialProps = async ctx => {
-  const isLoggedIn = protectedRoute(RouteType.LoggedIn, cookies(ctx));
-  if (!isLoggedIn) {
-    return redirect(ctx, '/login');
+  const jwt = cookies(ctx)[COOKIE_NAME];
+  const userInfo = getAuthedUserFromJwt(jwt);
+  if (!userInfo) {
+    return {};
   }
-
-  // TODO do i need to deal with requests from the clinet in any specific way?
-  const authToken = cookies(ctx)[COOKIE_NAME];
-  const additionalHeaders = ctx.req
-    ? {
-        cookie: `${COOKIE_NAME}=${authToken}`
-      }
-    : {};
-  const userInfoResponse = await doFetch('/me', {
-    headers: {
-      ...additionalHeaders
-    }
-  });
-  if (userInfoResponse.status !== 200) {
-    redirect(ctx, '/login');
-  }
-  const user = await userInfoResponse.json();
-  const { email, drinks } = user;
+  // const userInfoResponse = await doFetch(
+  //   '/me',
+  //   // we only need to put the cookie header if its a serverside call, else its sent
+  //   (ctx.req ? getAuthHeader(jwt) : {}),
+  // );
+  // console.log(userInfoResponse);
+  // if (userInfoResponse.status === 200) console.log(await userInfoResponse.json());
+  // if (userInfoResponse.status !== 200) {
+  //   redirect(ctx, '/login');
+  // }
   return {
-    user: {
-      email
-    },
-    drinks
-  };
+    userInfo,
+  }
 };
 
 export default Index;

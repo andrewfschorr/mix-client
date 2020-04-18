@@ -3,9 +3,9 @@ export default (cookieProps) => {
     throw new Error('Cookie props needs to be of type obejct');
   }
   let cookieString = '';
-  Object.entries(cookieProps).forEach(arrayEntries => {
+  Object.entries(cookieProps).forEach((arrayEntries) => {
     const [key, value] = arrayEntries;
     cookieString += `${key}=${value};`;
   });
   document.cookie = cookieString;
-}
+};

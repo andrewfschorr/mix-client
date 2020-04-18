@@ -26,6 +26,21 @@ const NoOptionsMessage = props => {
   );
 }
 
+const debounce = (fn, to) => {
+  let timeout;
+  return (...args) => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+
+    timeout = setTimeout(() => {
+      fn(...args);
+    }, to);
+  };
+}
+
+const debouncedLoadOptions = debounce(loadOptions, 1000);
+
 const DrinkSearch = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
   const [selectedDrinkId, updateSelectedDrink] = useState(null);
   // the drinks the user already has checked in
@@ -37,7 +52,7 @@ const DrinkSearch = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
         <Async
           className="w-full"
           instanceId={1} // da fuq
-          loadOptions={loadOptions}
+          loadOptions={debouncedLoadOptions}
           defaultOptions
           components={{ NoOptionsMessage }}
           styles={{ NoOptionsMessage: base => ({ ...base, ...{

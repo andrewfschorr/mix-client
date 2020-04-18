@@ -1,13 +1,12 @@
 import Router from 'next/router';
-import cookies from 'next-cookies';
-
-import doFetch from 'utils/doFetch';
+// import cookies from 'next-cookies';
+// import doFetch from 'utils/doFetch';
 import { COOKIE_NAME } from 'utils/appConstants';
 
 export const turnAuthCookieIntoHeader = function (cookies) {
-  const authToken = cookies[COOKIE_NAME];
+  const jwtToken = cookies[COOKIE_NAME];
   return {
-    Authorization: `Bearer ${authToken}`,
+    Authorization: `Bearer ${jwtToken}`,
   };
 };
 
@@ -23,25 +22,30 @@ export const redirect = ({ res, req }, location) => {
   return {};
 };
 
-export const redirectIfLoggedIn = async (ctx) => {
-  const cooks = cookies(ctx);
-  const authToken = cooks[COOKIE_NAME];
-  if (typeof authToken === 'undefined') return false;
-  // TODO do i need to deal with requests from the clinet in any specific way?
-  const additionalHeaders = ctx.req ? {
-    cookie: `${COOKIE_NAME}=${authToken}`,
-  } : {};
-
-
-  const userInfoResponse = await doFetch('/me', {
+export const getAuthHeader = (jwt) => {
+  return {
     headers: {
-      ...additionalHeaders,
+      cookie: `${COOKIE_NAME}=${jwt}`,
     },
-  });
-
-  if (userInfoResponse.status === 200) {
-    redirect(ctx, '/');
-    return true;
-  }
-  return false;
+  };
 };
+
+// export const redirectIfLoggedIn = async (ctx) => {
+//   const cooks = cookies(ctx);
+//   const jwtToken = cooks[COOKIE_NAME];
+//   if (typeof jwtToken === 'undefined') return false;
+//   // TODO do i need to deal with requests from the clinet in any specific way?
+//   const additionalHeaders = ctx.req ? {
+//     cookie: `${COOKIE_NAME}=${jwtToken}`,
+//   } : {};
+//   const userInfoResponse = await doFetch('/me', {
+//     headers: {
+//       ...additionalHeaders,
+//     },
+//   });
+//   if (userInfoResponse.status === 200) {
+//     redirect(ctx, '/');
+//     return true;
+//   }
+//   return false;
+// };
