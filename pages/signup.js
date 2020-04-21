@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Skeleton from 'common/Skeleton';
 import doFetch from 'utils/doFetch';
 import setCookie from 'utils/setCookie';
-import { COOKIE_NAME, } from 'utils/appConstants';
+import { COOKIE_NAME } from 'utils/appConstants';
 import { redirect } from 'utils/requestHelpers';
 import cookies from 'next-cookies';
 import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt.ts';

@@ -21,6 +21,7 @@ export interface AppContextInterface {
   email: string;
   name: string;
   userId: number;
+  cookie?: any;
 }
 
 export enum Units {

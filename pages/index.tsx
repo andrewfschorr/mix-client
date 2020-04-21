@@ -2,6 +2,7 @@ import doFetch from 'utils/doFetch.js';
 import Skeleton from 'common/Skeleton';
 import cookies from 'next-cookies';
 import AppContext from 'utils/AppContext';
+import { AppContextInterface } from 'models/types';
 import DrinkSearch from 'components/DrinkSearch';
 import { useState } from 'react';
 import { COOKIE_NAME } from 'utils/appConstants';
@@ -21,14 +22,13 @@ async function removeFromShelf(id: number, updateUserDrinks: any) { // TODO upda
 
 }
 
-function Index({ pathname, userInfo, drinks }) {
-  console.log({...userInfo});
+function Index({ pathname, userInfo, cookie, drinks }) {
   // const [drinkToAddName, setDrinkToAddName] = useState('');
-	// const [drinkDescription, setDrinkDescripton] = useState('');
+  // const [drinkDescription, setDrinkDescripton] = useState('');
 	const [userDrinks, updateUserDrinks] = useState(drinks);
   // const { email } = user;
   return (
-    <AppContext.Provider value={{ ...userInfo }}>
+    <AppContext.Provider value={{ ...userInfo, cookie }}>
       <Skeleton pathname={pathname}>
         <div className={`w-full main p-6 container mx-auto`}>
           <DrinkSearch
@@ -43,23 +43,11 @@ function Index({ pathname, userInfo, drinks }) {
 }
 
 Index.getInitialProps = async ctx => {
-  const jwt = cookies(ctx)[COOKIE_NAME];
-  const userInfo = getAuthedUserFromJwt(jwt);
-  if (!userInfo) {
-    return {};
-  }
-  // const userInfoResponse = await doFetch(
-  //   '/me',
-  //   // we only need to put the cookie header if its a serverside call, else its sent
-  //   (ctx.req ? getAuthHeader(jwt) : {}),
-  // );
-  // console.log(userInfoResponse);
-  // if (userInfoResponse.status === 200) console.log(await userInfoResponse.json());
-  // if (userInfoResponse.status !== 200) {
-  //   redirect(ctx, '/login');
-  // }
+  const cookie = cookies(ctx)[COOKIE_NAME];
+  const userInfo = getAuthedUserFromJwt(cookie);
   return {
-    userInfo,
+    cookie,
+    ...(userInfo ? { userInfo } : {}),
   }
 };
 

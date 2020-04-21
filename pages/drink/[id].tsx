@@ -26,7 +26,7 @@ AddAdrink.getInitialProps = async (ctx) => {
   let drink;
   if (drinkResponse.status !== 200) {
     console.warn('Could not find your drink');
-    // TODO log this somewhere and have error component
+    // TODO have an "cant find this specific drink" message
   } else {
     drink = await drinkResponse.json();
   }
