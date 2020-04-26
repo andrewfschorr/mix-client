@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { useState } from 'react';
 import Skeleton from 'common/Skeleton';
-import doFetch from 'utils/doFetch';
+import makeRequest from 'utils/makeRequest.ts';
 import setCookie from 'utils/setCookie';
 import { COOKIE_NAME } from 'utils/appConstants';
 import { redirect } from 'utils/requestHelpers';
@@ -14,7 +14,7 @@ const signup = async (e, email, password, passwordVerify, accessCode, toggleHasE
     toggleHasError('Oops, passwords don\'t seem to match');
     return;
   }
-  const resp = await doFetch('/signup', {
+  const resp = await makeRequest('/signup', {
     method: 'POST',
     body: {
       email,

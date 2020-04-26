@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import doFetch from 'utils/doFetch.js';
+import { useState, useContext } from 'react';
+import makeRequest from 'utils/makeRequest';
 import Skeleton from 'common/Skeleton';
 import AppContext from 'utils/AppContext';
 import cookies from 'next-cookies';
@@ -8,8 +8,9 @@ import IngredientList from 'components/IngredientList';
 import { AppContextInterface } from 'models/types';
 import { COOKIE_NAME } from 'utils/appConstants';
 import { Drink } from 'models/types';
+import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
-function Index({ pathname, email }) {
+function Index({ pathname, userInfo, cookie }) {
   const [drinkToAdd, setDrinkToAdd] = useState<Drink>({
     name: '',
     description: '',
@@ -28,7 +29,7 @@ function Index({ pathname, email }) {
   >(false);
 
   return (
-    <AppContext.Provider value={{ email }}>
+    <AppContext.Provider value={{ ...userInfo, cookie }}>
       <Skeleton pathname={pathname}>
         <div className="w-full main py-6 container mx-auto px-4 md:px-0">
           <h1 className="mb-2">Add Drink</h1>
@@ -118,8 +119,9 @@ function Index({ pathname, email }) {
                 }
 
                 const { ingredients, name, description } = drinkToAdd;
-                doFetch('/drink', {
+                makeRequest('/drink', {
                   method: 'POST',
+                  headers: turnAuthCookieIntoHeader(cookie),
                   body: {
                     ingredients,
                     name,
@@ -142,31 +144,12 @@ function Index({ pathname, email }) {
 }
 
 Index.getInitialProps = async (ctx) => {
-  const jwt = cookies(ctx)[COOKIE_NAME];
-  const userInfo = getAuthedUserFromJwt(jwt);
-  if (!userInfo) {
-    return {};
-  }
-
-  // const jwt = cookies(ctx)[COOKIE_NAME];
-  // const additionalHeaders = ctx.req
-  //   ? {
-  //       cookie: `${COOKIE_NAME}=${jwt}`,
-  //     }
-  //   : {};
-  // const userInfoResponse = await doFetch('/me', {
-  //   headers: {
-  //     ...additionalHeaders,
-  //   },
-  // });
-  // if (userInfoResponse.status !== 200) {
-  //   redirect(ctx, '/login');
-  // }
-  // const user = await userInfoResponse.json();
-  // const { email } = user;
-  // const { email } = userInfo;
-  const { email } = userInfo;
-  return { email };
+  const cookie = cookies(ctx)[COOKIE_NAME];
+  const userInfo = getAuthedUserFromJwt(cookie);
+  return {
+    cookie,
+    ...(userInfo ? { userInfo } : {}),
+  };
 };
 
 export default Index;

@@ -1,9 +1,11 @@
-import doFetch from 'utils/doFetch';
 import Async from 'react-select/async';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import makeRequest from 'utils/makeRequest.ts';
+import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
+import AppContext from 'utils/AppContext';
 
 const loadOptions = (inputVal, callBack) => {
-  doFetch(`/drinks${inputVal.trim() ? `?q=${inputVal}` : ''}`)
+  makeRequest(`/drinks${inputVal.trim() ? `?q=${inputVal}` : ''}`)
     .then((resp) => resp.json())
     .then((resp) =>
       resp.map((drink) => ({
@@ -15,9 +17,12 @@ const loadOptions = (inputVal, callBack) => {
     .then(callBack);
 };
 
+// fix meeee
 const addToShelf = (id, updateUserDrinks) => {
-  doFetch(`/shelf/${id}`, {
+  makeRequest(`/shelf/${id}`, {
     method: 'POST',
+    // TODO get me working
+    // headers: turnAuthCookieIntoHeader(cookies),
   })
     .then((resp) => resp.json())
     .then((response) => {
@@ -32,7 +37,10 @@ const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
     acc[cur.id] = true;
     return acc;
   }, {});
-  // TOODO remove from this map on delete request
+
+  const ctx = useContext(AppContext);
+  console.log(ctx);
+
   return (
     <div>
       <ul>

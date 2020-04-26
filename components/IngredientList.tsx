@@ -1,4 +1,4 @@
-import doFetch from 'utils/doFetch';
+import makeRequest from 'utils/makeRequest';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { useState, useEffect } from 'react';
 import { Ingredient, Units } from 'models/types';
@@ -25,7 +25,7 @@ const newIngredientWarning = {
 };
 
 const loadOptions = (inputVal, callBack) => {
-  doFetch(`/ingredients${inputVal.trim() ? `?q=${inputVal}` : ''}`)
+  makeRequest(`/ingredients${inputVal.trim() ? `?q=${inputVal}` : ''}`)
     .then((resp) => resp.json())
     .then((resp) =>
       resp.map((drink) => ({

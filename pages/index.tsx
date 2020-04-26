@@ -44,6 +44,8 @@ function Index({ pathname, userInfo, cookie, drinks }) {
 
 Index.getInitialProps = async ctx => {
   const cookie = cookies(ctx)[COOKIE_NAME];
+  console.log(cookie);
+  console.log(COOKIE_NAME);
   const userInfo = getAuthedUserFromJwt(cookie);
   return {
     cookie,

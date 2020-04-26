@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import doFetch from 'utils/doFetch';
+import makeRequest from 'utils/makeRequest.ts';
 import setCookie from 'utils/setCookie';
 import Skeleton from 'common/Skeleton';
 import { redirect } from 'utils/requestHelpers';
@@ -10,7 +10,7 @@ import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt.ts';
 const logUserIn = async (e, email, password, toggleHasError) => {
   e.preventDefault();
   if (email.trim() === '' || password.trim() === '') return;
-  const resp = await doFetch('/login', {
+  const resp = await makeRequest('/login', {
     method: 'POST',
     body: {
       email,
@@ -80,7 +80,7 @@ const Login = ({ pathname }) => {
   );
 };
 
-Login.getInitialProps = function (ctx) {
+Login.getInitialProps = function f(ctx) {
   const jwt = cookies(ctx)[COOKIE_NAME];
   const userInfo = getAuthedUserFromJwt(jwt);
   if (userInfo) {

@@ -1,30 +1,21 @@
 import { useState, useContext } from 'react';
 import Link from 'next/link';
-import doFetch from 'utils/doFetch.js';
 import makeRequest from 'utils/makeRequest';
 import { COOKIE_NAME } from 'utils/appConstants';
 import Async from 'react-select/async';
 import AppContext from 'utils/AppContext';
 import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
-
 import styles from './styles/DrinkSearch.module.css';
 
 const loadOptions = (inputVal, callBack) => {
-  doFetch(`/drinks${inputVal.trim() ? `?q=${inputVal}` : ''}`)
+  makeRequest(`/drinks${inputVal.trim() ? `?q=${inputVal}` : ''}`)
     .then((resp) => resp.json())
     .then((resp) => resp.map((drink) => ({
       value: drink.name,
       label: drink.name,
       id: drink.id,
     }))).then(callBack);
-  // makeRequest(`/drinks${inputVal.trim() ? `?q=${inputVal}` : ''}`)
-  //   .then((resp) => resp.json())
-  //   .then((resp) => resp.map((drink) => ({
-  //     value: drink.name,
-  //     label: drink.name,
-  //     id: drink.id,
-  //   }))).then(callBack);
 };
 
 
