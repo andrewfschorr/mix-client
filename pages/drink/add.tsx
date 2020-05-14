@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useReducer, useState, useEffect } from 'react';
 import makeRequest from 'utils/makeRequest';
 import Skeleton from 'common/Skeleton';
 import AppContext from 'utils/AppContext';
@@ -9,13 +9,47 @@ import { AppContextInterface } from 'models/types';
 import { COOKIE_NAME } from 'utils/appConstants';
 import { Drink } from 'models/types';
 import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
+import Instructions from 'components/Instructions';
+
+const reducer = (state, action): Drink => {
+  if (action.type === 'name' || action.type === 'description') {
+    return {
+      ...state,
+      [action.type]: action.data,
+    };
+  } else if (action.type === 'ingredients') {
+    return {
+      ...state,
+      ingredients: [...action.data],
+    };
+  } else if (action.type === 'instructions') {
+    return {
+      ...state,
+      instructions: [...action.data],
+    };
+  }
+  return state;
+};
 
 function Index({ pathname, userInfo, cookie }) {
-  const [drinkToAdd, setDrinkToAdd] = useState<Drink>({
+  const [drinkToAdd, drinkReducer] = useReducer(reducer, {
     name: '',
     description: '',
     ingredients: [],
+    instructions: [],
   });
+
+  useEffect(() => {
+    if (
+      drinkToAdd.instructions.length === 0 ||
+      drinkToAdd.instructions[drinkToAdd.instructions.length - 1] !== ''
+    ) {
+      drinkReducer({
+        type: 'instructions',
+        data: [...drinkToAdd.instructions, ''],
+      });
+    }
+  }, [drinkToAdd]);
 
   // errors
   const [nameSubmissionError, setNameSubmissionError] = useState<boolean>(
@@ -46,10 +80,10 @@ function Index({ pathname, userInfo, cookie }) {
                 value={drinkToAdd.name}
                 onChange={(e) => {
                   const name = e.target.value;
-                  setDrinkToAdd((drinkToAdd) => ({
-                    ...drinkToAdd,
-                    name,
-                  }));
+                  drinkReducer({
+                    type: 'name',
+                    data: name,
+                  });
                 }}
               />
               <h3 className="mb-2">Drink Description</h3>
@@ -63,10 +97,10 @@ function Index({ pathname, userInfo, cookie }) {
                 value={drinkToAdd.description}
                 onChange={(e) => {
                   const description = e.target.value;
-                  setDrinkToAdd((drinkToAdd) => ({
-                    ...drinkToAdd,
-                    description,
-                  }));
+                  drinkReducer({
+                    type: 'description',
+                    data: description,
+                  });
                 }}
               ></textarea>
             </div>
@@ -88,14 +122,21 @@ function Index({ pathname, userInfo, cookie }) {
                 if (ingredientSubmissionError && ingredients.length > 0) {
                   setIngredientSubmissionError(false);
                 }
-                setDrinkToAdd((drinkToAdd) => ({
-                  ...drinkToAdd,
-                  ingredients,
-                }));
+                drinkReducer({
+                  type: 'ingredients',
+                  data: ingredients,
+                });
               }}
             />
           </div>
-          <div>
+          <div className="pt-6">
+            <h2>Instructions</h2>
+            <Instructions
+              drinkReducer={drinkReducer}
+              instructionList={drinkToAdd.instructions}
+            />
+          </div>
+          <div className="flex justify-end">
             <button
               className="my-5 bg-blue-500 text-white font-bold py-2 px-4 rounded"
               onClick={(e) => {
@@ -118,7 +159,7 @@ function Index({ pathname, userInfo, cookie }) {
                   return;
                 }
 
-                const { ingredients, name, description } = drinkToAdd;
+                const { ingredients, name, description, instructions } = drinkToAdd;
                 makeRequest('/drink', {
                   method: 'POST',
                   headers: turnAuthCookieIntoHeader(cookie),
@@ -126,12 +167,13 @@ function Index({ pathname, userInfo, cookie }) {
                     ingredients,
                     name,
                     description,
+                    instructions: instructions.filter(item => item),
                   },
-                }).then(resp => {
+                }).then((resp) => {
                   if (resp.status === 200) {
                     return resp.json();
                   }
-                })
+                });
               }}
             >
               Add Drink!

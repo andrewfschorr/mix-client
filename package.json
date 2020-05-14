@@ -23,7 +23,9 @@
     "postcss-modules": "^1.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
+    "react-contenteditable": "^3.3.4",
     "react-dom": "^16.13.1",
+    "react-images-uploading": "^2.1.1",
     "react-select": "^3.0.8",
     "sass": "^1.26.3"
   },

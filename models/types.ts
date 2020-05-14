@@ -4,6 +4,7 @@ export interface Drink {
   ingredients: Ingredient[],
   name: string,
   description: string,
+  instructions: string[],
 }
 
 export interface Ingredient {

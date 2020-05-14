@@ -239,6 +239,13 @@ const IngredientList = ({
             setIngredientsList((ingredientsList) => {
               return ingredientsList.concat(ingredientToAdd);
             });
+
+            // reset state
+            setIngredientToAdd({
+              name: '',
+              unit: 1,
+              amount: '',
+            })
           }}
         >
           <svg
