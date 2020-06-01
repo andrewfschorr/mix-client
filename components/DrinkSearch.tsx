@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import Link from 'next/link';
+import Router from 'next/router'
 import makeRequest from 'utils/makeRequest';
-import { COOKIE_NAME } from 'utils/appConstants';
 import Async from 'react-select/async';
 import AppContext from 'utils/AppContext';
-import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
+// import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
 import styles from './styles/DrinkSearch.module.css';
 
@@ -45,12 +45,10 @@ const debounce = (fn, to) => {
 const debouncedLoadOptions = debounce(loadOptions, 1000);
 
 const DrinkSearch = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
+  // const router = useRouter();
+  // i dont think this is even really used
   const [selectedDrinkId, updateSelectedDrink] = useState(null);
   const { cookie } = useContext(AppContext);
-
-  makeRequest('/me', {
-    headers: turnAuthCookieIntoHeader(cookie),
-  });
 
   return (
     <div>
@@ -62,14 +60,21 @@ const DrinkSearch = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
           loadOptions={debouncedLoadOptions}
           defaultOptions
           components={{ NoOptionsMessage }}
-          styles={{ NoOptionsMessage: base => ({ ...base, ...{
-            background: 'red',
-          }})}}
+          styles={{
+            option: base => ({
+              ...base,
+              '&:hover': {
+                cursor: 'pointer'
+              }
+            })
+          }}
           onChange={(itemSelection, actionData) => {
             if (actionData.action === 'clear') {
               updateSelectedDrink(null);
             } else {
               updateSelectedDrink(itemSelection.id);
+              const { id } = itemSelection;
+              Router.push(`/drink/[id]`, `/drink/${id}`)
             }
           }}
         />

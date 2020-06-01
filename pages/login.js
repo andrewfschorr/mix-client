@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import makeRequest from 'utils/makeRequest.ts';
-import setCookie from 'utils/setCookie';
+import Cookies from 'js-cookie';
+import { COOKIE_NAME } from 'utils/appConstants';
 import Skeleton from 'common/Skeleton';
 import { redirect } from 'utils/requestHelpers';
-import { COOKIE_NAME } from 'utils/appConstants';
 import cookies from 'next-cookies';
 import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt.ts';
 
@@ -19,7 +19,7 @@ const logUserIn = async (e, email, password, toggleHasError) => {
   });
   if (resp.status === 200) {
     const data = await resp.json();
-    setCookie({ [COOKIE_NAME]: data.access_token });
+    Cookies.set(COOKIE_NAME, data.access_token, { expires: 3650 });
     redirect({}, '/');
   } else {
     toggleHasError(true);
@@ -30,7 +30,6 @@ const Login = ({ pathname }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hasError, toggleHasError] = useState(false);
-
   return (
     <Skeleton pathname={pathname}>
       <div className="w-full justify-center items-center flex main">

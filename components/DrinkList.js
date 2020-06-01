@@ -1,7 +1,7 @@
 import Async from 'react-select/async';
 import { useState, useContext } from 'react';
 import makeRequest from 'utils/makeRequest.ts';
-import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
+// import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 import AppContext from 'utils/AppContext';
 
 const loadOptions = (inputVal, callBack) => {
@@ -39,7 +39,6 @@ const DrinkList = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
   }, {});
 
   const ctx = useContext(AppContext);
-  console.log(ctx);
 
   return (
     <div>

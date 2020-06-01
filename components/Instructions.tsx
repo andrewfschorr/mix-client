@@ -7,10 +7,9 @@ const Instructions = ({ drinkReducer, instructionList }) => {
   const instructs = instructionList.map((instruction, i) => {
     const ref = React.createRef<HTMLParagraphElement>();
     const isLastItem = i !== instructionList.length - 1;
-
     return (
-      <li className="list-disc py-2" key={i}>
-        <div className="flex">
+      <li key={i}>
+        <div className="inline-flex">
           <ContentEditable
             innerRef={ref}
             style={{ minWidth: 100, marginRight: 10 }}
@@ -123,7 +122,7 @@ const Instructions = ({ drinkReducer, instructionList }) => {
     );
   });
 
-  return <ul>{instructs}</ul>;
+  return <ul className="list-inside list-disc">{instructs}</ul>;
 };
 
 export default Instructions;

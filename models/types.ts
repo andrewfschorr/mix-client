@@ -5,6 +5,7 @@ export interface Drink {
   name: string,
   description: string,
   instructions: string[],
+  image?: any, // TODO fix meeeee
 }
 
 export interface Ingredient {

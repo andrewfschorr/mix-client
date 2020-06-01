@@ -10,6 +10,7 @@ import { COOKIE_NAME } from 'utils/appConstants';
 import { Drink } from 'models/types';
 import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 import Instructions from 'components/Instructions';
+import ImageUploading from 'react-images-uploading';
 
 const reducer = (state, action): Drink => {
   if (action.type === 'name' || action.type === 'description') {
@@ -27,6 +28,11 @@ const reducer = (state, action): Drink => {
       ...state,
       instructions: [...action.data],
     };
+  } else if (action.type === 'image') {
+    return {
+      ...state,
+      image: action.image,
+    }
   }
   return state;
 };
@@ -37,6 +43,7 @@ function Index({ pathname, userInfo, cookie }) {
     description: '',
     ingredients: [],
     instructions: [],
+    image: null,
   });
 
   useEffect(() => {
@@ -107,10 +114,59 @@ function Index({ pathname, userInfo, cookie }) {
             <div className="md:col-span-4">
               <div className="rounded bg-gray-400 px-8 py-4">
                 <h2>Drink Image</h2>
-                <div className="bg-white rounded my-3 p-3">
-                  <img src="/default-drink.png" alt="" />
-                </div>
-                <a href="#">Upload Image</a>
+                <ImageUploading
+                  onChange={(imageList) => {
+                    drinkReducer({
+                      type: 'image',
+                      image: imageList[0],
+                    });
+                  }}
+                  // 2?!?! WTFFFFFF
+                  maxNumber={2}
+                  multiple={false}
+                  maxFileSize={5}
+                  acceptType={['jpg', 'gif', 'png', 'jpeg']}
+                >
+                  {({ imageList, onImageUpload, onImageRemoveAll }) => {
+                    return (
+                      <div>
+                        <div className="bg-white rounded my-3 p-3">
+                          <img
+                            src={
+                              imageList.length
+                                ? imageList[0].dataURL
+                                : '/default-drink.png'
+                            }
+                          />
+                        </div>
+                        <button
+                          onClick={onImageUpload}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                          Upload Image
+                        </button>
+                        {imageList.length ? (
+                          <svg
+                            className="bi bi-trash-fill ml-3"
+                            width="1.6em"
+                            height="1.6em"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            style={{cursor: 'pointer', display: 'inline-block',}}
+                            onClick={onImageRemoveAll}
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                        ) : null}
+                      </div>
+                    );
+                  }}
+                </ImageUploading>
               </div>
             </div>
           </div>
@@ -159,16 +215,31 @@ function Index({ pathname, userInfo, cookie }) {
                   return;
                 }
 
-                const { ingredients, name, description, instructions } = drinkToAdd;
+                const {
+                  ingredients,
+                  name,
+                  description,
+                  instructions,
+                  image,
+                } = drinkToAdd;
+
+                const body = {
+                  ingredients,
+                  name,
+                  description,
+                  instructions: instructions.filter((item) => item),
+                  image,
+                };
+
+                if (image) {
+                  body.image = image;
+                }
+
                 makeRequest('/drink', {
                   method: 'POST',
                   headers: turnAuthCookieIntoHeader(cookie),
-                  body: {
-                    ingredients,
-                    name,
-                    description,
-                    instructions: instructions.filter(item => item),
-                  },
+                  type: (image) ? 'formData' : 'application/json',
+                  body,
                 }).then((resp) => {
                   if (resp.status === 200) {
                     return resp.json();

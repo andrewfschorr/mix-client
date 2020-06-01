@@ -1,4 +1,4 @@
-import doFetch from 'utils/doFetch.js';
+import makeRequest from 'utils/makeRequest';
 import Skeleton from 'common/Skeleton';
 import cookies from 'next-cookies';
 import AppContext from 'utils/AppContext';
@@ -11,7 +11,8 @@ import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt';
 // import styles from './foo.module.css';
 
 async function removeFromShelf(id: number, updateUserDrinks: any) { // TODO update any
-	doFetch(`/shelf/${id}`, {
+  // I DONT HTNK THIS WORKS, havent tested
+  makeRequest(`/shelf/${id}`, {
     method: 'DELETE',
 	}).then(resp => resp.json()).then((resp) => {
 		const { drinkRemoved } = resp;
@@ -44,8 +45,6 @@ function Index({ pathname, userInfo, cookie, drinks }) {
 
 Index.getInitialProps = async ctx => {
   const cookie = cookies(ctx)[COOKIE_NAME];
-  console.log(cookie);
-  console.log(COOKIE_NAME);
   const userInfo = getAuthedUserFromJwt(cookie);
   return {
     cookie,
