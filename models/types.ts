@@ -5,6 +5,7 @@ export interface Drink {
   name: string,
   description: string,
   instructions: string[],
+  tags?: number[],
   image?: any, // TODO fix meeeee
 }
 

@@ -11,6 +11,7 @@ import { Drink } from 'models/types';
 import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 import Instructions from 'components/Instructions';
 import ImageUploading from 'react-images-uploading';
+import Async from 'react-select/async';
 
 const reducer = (state, action): Drink => {
   if (action.type === 'name' || action.type === 'description') {
@@ -33,9 +34,35 @@ const reducer = (state, action): Drink => {
       ...state,
       image: action.image,
     }
+  } else if (action.type === 'tags') {
+    return {
+      ...state,
+      tags: [...action.data],
+    }
   }
   return state;
 };
+
+const getTags = () => {
+  return new Promise((resolve) => {
+    makeRequest('/tags').then(resp => resp.json()).then(tagResponse => {
+      resolve(tagResponse.map(tag => ({
+        value: tag.id,
+        label: tag.name,
+      })));
+    });
+  });
+}
+
+const tagPromise = getTags();
+
+const loadOptions = (inputVal) => {
+  return new Promise((resolve) => {
+    tagPromise.then((tags: Array<any>) => {
+      resolve(tags.filter(tag => tag.label.toLowerCase().includes(inputVal)));
+    });
+  });
+}
 
 function Index({ pathname, userInfo, cookie }) {
   const [drinkToAdd, drinkReducer] = useReducer(reducer, {
@@ -43,6 +70,7 @@ function Index({ pathname, userInfo, cookie }) {
     description: '',
     ingredients: [],
     instructions: [],
+    tags: [],
     image: null,
   });
 
@@ -192,6 +220,36 @@ function Index({ pathname, userInfo, cookie }) {
               instructionList={drinkToAdd.instructions}
             />
           </div>
+          <div>
+            <h2 className="mt-3">Drink Tags</h2>
+            <Async
+              className="w-full"
+              instanceId={2} // da fuq
+              isMulti={true}
+              loadOptions={loadOptions}
+              defaultOptions
+              styles={{
+                option: base => ({
+                  ...base,
+                  '&:hover': {
+                    cursor: 'pointer'
+                  }
+                })
+              }}
+              onChange={(selectedTags) => {
+                let tagIds;
+                if (selectedTags === null) {
+                  tagIds = [];
+                } else {
+                  tagIds = selectedTags.map(tag => tag.value);
+                }
+                drinkReducer({
+                  type: 'tags',
+                  data: [...tagIds],
+                });
+              }}
+            />
+          </div>
           <div className="flex justify-end">
             <button
               className="my-5 bg-blue-500 text-white font-bold py-2 px-4 rounded"
@@ -208,6 +266,7 @@ function Index({ pathname, userInfo, cookie }) {
                   const [setErr, condition] = e;
                   if (!condition) {
                     setErr(true);
+                    hasError = true;
                   }
                 });
 
@@ -221,6 +280,7 @@ function Index({ pathname, userInfo, cookie }) {
                   description,
                   instructions,
                   image,
+                  tags,
                 } = drinkToAdd;
 
                 const body = {
@@ -229,6 +289,7 @@ function Index({ pathname, userInfo, cookie }) {
                   description,
                   instructions: instructions.filter((item) => item),
                   image,
+                  tags,
                 };
 
                 if (image) {

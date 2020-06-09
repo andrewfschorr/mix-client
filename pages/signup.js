@@ -7,6 +7,7 @@ import { COOKIE_NAME } from 'utils/appConstants';
 import { redirect } from 'utils/requestHelpers';
 import cookies from 'next-cookies';
 import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt.ts';
+import LoginWithFacebook from 'components/LoginWithFacebook.tsx';
 
 const signup = async (
   e,
@@ -49,8 +50,6 @@ const Login = ({ pathname }) => {
   const [accessCode, setAccessCode] = useState('');
   const [passwordVerify, setPasswordVerify] = useState('');
   const [hasError, toggleHasError] = useState(false);
-
-  const [facebookAccessCode, setFacebookAccessCode] = useState('');
 
   return (
     <Skeleton pathname={pathname}>
@@ -139,41 +138,16 @@ const Login = ({ pathname }) => {
                     password,
                     passwordVerify,
                     accessCode,
-                    toggleHasError
+                    toggleHasError,
                   )
                 }
               >
                 Sign up
               </button>
             </div>
-            <hr />
-
-            {/* Facebook Login */}
-            <h5>Log in with Facebook</h5>
-            <div>
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="facebookAccessCode"
-              >
-                Access Code
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="facebookAccessCode"
-                type="password"
-                placeholder=""
-                value={facebookAccessCode}
-                onChange={(e) => setFacebookAccessCode(e.target.value)}
-              />
-            </div>
-            <a
-              className="mt-6 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              href="https://mixapp.test/api/login/facebook?accessCode=WHISKEY_NEAT"
-              type="button"
-            >
-              login with facebook
-            </a>
           </form>
+          <hr />
+          <LoginWithFacebook />
         </div>
       </div>
     </Skeleton>

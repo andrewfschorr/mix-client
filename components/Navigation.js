@@ -35,7 +35,11 @@ export default function Navigation({ pathname }) {
         <AppContext.Consumer>
           {(ctx) => {
             if (ctx.email) {
-              return <h3>Oh hay {ctx.email}</h3>;
+              return (
+                <Link href="/profile">
+                  <h3>Oh hay {ctx.email}</h3>
+                </Link>
+              );
             }
             return (
               <ul className="flex">

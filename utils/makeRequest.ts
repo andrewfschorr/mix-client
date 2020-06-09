@@ -1,7 +1,7 @@
 import unfetch from 'isomorphic-unfetch';
 import https from 'https';
 
-import { IS_DEV } from 'utils/appConstants';
+import { API_URL, IS_DEV } from 'utils/appConstants';
 
 const APPLICATION_JSON = 'application/json';
 
@@ -20,7 +20,6 @@ const appendFormData = (body) => {
       }
     }
   }
-  console.log(formData);
   return formData;
 }
 
@@ -65,7 +64,6 @@ export default function(
     reqData.headers['Accept'] = accept;
   }
 
-  console.log(endpoint, reqData, body);
-  const url = IS_DEV ? 'https://mixapp.test' : 'https://topofshelf.com';
-  return unfetch(`${url}/api${endpoint}`, reqData);
+  // const url = IS_DEV ? 'https://mixapp.test' : 'https://topofshelf.com';
+  return unfetch(`${API_URL}/api${endpoint}`, reqData);
 };

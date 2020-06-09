@@ -3,7 +3,8 @@ import Link from 'next/link';
 import Router from 'next/router'
 import makeRequest from 'utils/makeRequest';
 import Async from 'react-select/async';
-import AppContext from 'utils/AppContext';
+import { debounce } from 'utils';
+// import AppContext from 'utils/AppContext';
 // import { turnAuthCookieIntoHeader } from 'utils/requestHelpers';
 
 import styles from './styles/DrinkSearch.module.css';
@@ -29,26 +30,13 @@ const NoOptionsMessage = props => {
   );
 }
 
-const debounce = (fn, to) => {
-  let timeout;
-  return (...args) => {
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-
-    timeout = setTimeout(() => {
-      fn(...args);
-    }, to);
-  };
-}
-
 const debouncedLoadOptions = debounce(loadOptions, 1000);
 
 const DrinkSearch = ({ drinks, removeDrinkCb, updateUserDrinks }) => {
   // const router = useRouter();
   // i dont think this is even really used
   const [selectedDrinkId, updateSelectedDrink] = useState(null);
-  const { cookie } = useContext(AppContext);
+  // const { cookie } = useContext(AppContext);
 
   return (
     <div>
