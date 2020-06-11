@@ -3,8 +3,9 @@ import AppContext from 'utils/AppContext';
 import makeRequest from 'utils/makeRequest';
 import getAuthedUserFromJwt from 'utils/getAuthedUserFromJwt';
 import { COOKIE_NAME } from 'utils/appConstants';
-import { Ingredient, Units } from 'models/types';
+import { Units } from 'models/types';
 import cookies from 'next-cookies';
+import Link from 'next/link';
 
 const getContent = (drink) => {
   if (!drink) {
@@ -31,17 +32,19 @@ const getContent = (drink) => {
               );
             })}
           </ul>
-        ) : <p>Uh oh, missing instructions for {drink.name}</p>}
+        ) : (
+          <p>Uh oh, missing instructions for {drink.name}</p>
+        )}
         <h4 className="mt-4 mb-2 underline">Instructions</h4>
         {drink.instructions.length ? (
           <ul className="list-inside list-disc">
             {drink.instructions.map((instruction, i) => {
-              return (
-                <li key={i}>{instruction}</li>
-              );
+              return <li key={i}>{instruction}</li>;
             })}
           </ul>
-        ) : <p>No instructions for {drink.instructions} 😕</p>}
+        ) : (
+          <p>No instructions for {drink.instructions} 😕</p>
+        )}
       </div>
       <div className="md:col-span-4">
         <div className="rounded bg-gray-400 px-8 py-4">
@@ -52,6 +55,18 @@ const getContent = (drink) => {
             />
           </div>
         </div>
+      </div>
+      <div className="md:col-span-12">
+        <h4 className="mb-2 underline">tags</h4>
+        {drink.tags.length
+          ? drink.tags.map((tag) => {
+              return (
+                <Link href="/tag/[id]" as={`/tag/${tag.id}`} key={tag.id}>
+                  <a className="mb-2 mr-2 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{tag.name}</a>
+                </Link>
+              );
+            })
+          : null}
       </div>
     </>
   );
